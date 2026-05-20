@@ -3,7 +3,7 @@ package com.pietro.inventory_api.service;
 import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
-import com.pietro.inventory_api.exception.ResourceNotFoundException;
+import com.pietro.inventory_api.exception.ItemNotFoundException;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -61,9 +61,8 @@ public class ItemService {
     public ItemResponse findById(Long id) {
         Item item = repository.findById(id)
                 .orElseThrow(()->
-                        new ResourceNotFoundException(
-                                "Item not found"
-                        )
+                        new ItemNotFoundException(id)
+
                 );
         return toResponse(item);
     }
@@ -77,7 +76,7 @@ public class ItemService {
 
     public ItemResponse update(Long id, UpdateItemRequest request) {
         Item item = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ItemNotFoundException(id));
 
         item.setName(request.getName());
         item.setDescription(request.getDescription());
@@ -94,7 +93,7 @@ public class ItemService {
 
     public void delete(Long id) {
         Item item = repository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ItemNotFoundException(id));
 
         repository.delete(item);
 

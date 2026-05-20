@@ -5,6 +5,7 @@ import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.service.ItemService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item addItem(@RequestBody Item item){
+    public Item addItem(@Valid @RequestBody Item item){
         return service.addItem(item);
     }
 
