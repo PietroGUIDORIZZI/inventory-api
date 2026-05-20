@@ -47,7 +47,7 @@ public class Item {
             description = "No description";
         }
 
-        if(quantity == null || quantity < 0){
+        if(quantity == null ){
             quantity = 1;
         }
 
@@ -88,11 +88,6 @@ public class Item {
     }
 
     public void setQuantity(Integer quantity) {
-        if(quantity == null || quantity < 0){
-            throw new IllegalArgumentException("Invalid quantity");
-        }
-
-
         this.quantity = quantity;
     }
 
