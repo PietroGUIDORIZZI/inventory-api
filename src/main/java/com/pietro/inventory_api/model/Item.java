@@ -40,25 +40,6 @@ public class Item {
     public Item() {
     }
 
-    @PrePersist
-    public void applyDefaults() {
-
-        if(description == null || description.isBlank()){
-            description = "No description";
-        }
-
-        if(quantity == null ){
-            quantity = 1;
-        }
-
-        if(room == null){
-            room = Room.NOT_ALLOCATED;
-        }
-
-        if(category == null){
-            category = Category.NOT_CATEGORIZED;
-        }
-    }
 
     public Long getId() {
         return id;
