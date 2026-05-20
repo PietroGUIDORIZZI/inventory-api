@@ -17,6 +17,9 @@ public class Item {
 
     private int quantity;
 
+    @Enumerated(EnumType.STRING)
+    private Room room;
+
     public Item() {
     }
 
@@ -24,6 +27,7 @@ public class Item {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
+        this.room = room;
     }
 
     public Long getId() {
@@ -40,6 +44,10 @@ public class Item {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    public Room getRoom() {
+        return room;
     }
 
     public void setName(String name) {
