@@ -1,33 +1,52 @@
 package com.pietro.inventory_api.model;
 
-
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
+
 @Entity
+@Table(name = "items")
 public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotBlank(message = "Name is required")
     private String name;
 
     private String description;
 
-    private int quantity;
+
+    private Integer quantity;
 
     @Enumerated(EnumType.STRING)
     private Room room;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     public Item() {
     }
 
-    public Item(String name, String description, int quantity) {
-        this.name = name;
-        this.description = description;
-        this.quantity = quantity;
-        this.room = room;
+    @PrePersist
+    public void applyDefaults() {
+
+        if(description == null || description.isBlank()){
+            description = "No description";
+        }
+
+        if(quantity == null || quantity < 0){
+            quantity = 1;
+        }
+
+        if(room == null){
+            room = Room.NOT_ALLOCATED;
+        }
+
+        if(category == null){
+            category = Category.NOT_CATEGORIZED;
+        }
     }
 
     public Long getId() {
@@ -38,27 +57,51 @@ public class Item {
         return name;
     }
 
+    public void setName(String name) {
+        if(name == null|| name.isBlank()){
+            throw new IllegalArgumentException("Name is required");
+        }
+
+        this.name = name.trim();
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public int getQuantity() {
+    public void setDescription(String description) {
+        if(description == null || description.isBlank()){
+            this.description = "No description";
+        }
+        this.description = description.trim();
+    }
+
+    public Integer getQuantity() {
         return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        if(quantity == null || quantity < 0){
+            throw new IllegalArgumentException("Invalid quantity");
+        }
+
+
+        this.quantity = quantity;
     }
 
     public Room getRoom() {
         return room;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
