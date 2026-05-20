@@ -67,10 +67,6 @@ public class Item {
     }
 
     public void setName(String name) {
-        if(name == null|| name.isBlank()){
-            throw new IllegalArgumentException("Name is required");
-        }
-
         this.name = name.trim();
     }
 
