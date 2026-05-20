@@ -1,11 +1,20 @@
 package com.pietro.inventory_api.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "items")
+@JsonPropertyOrder({
+        "id",
+        "name",
+        "description",
+        "quantity",
+        "room",
+        "category"
+})
 public class Item {
 
     @Id
