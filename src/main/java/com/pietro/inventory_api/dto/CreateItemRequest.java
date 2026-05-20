@@ -3,6 +3,7 @@ package com.pietro.inventory_api.dto;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public class CreateItemRequest {
 
@@ -11,18 +12,23 @@ public class CreateItemRequest {
 
     private String description;
 
+    @Positive(message = "Quantity must be positive")
     private Integer quantity;
 
     private Room room;
 
     private Category category;
 
-    public void setDescription(String description) {
-        this.description = description;
+    public CreateItemRequest(){
+
     }
 
     public Integer getQuantity() {
         return quantity;
+    }
+
+    public String getDescription(){
+        return description;
     }
 
     public Room getRoom() {
@@ -41,8 +47,8 @@ public class CreateItemRequest {
         this.name = name;
     }
 
-    public String getDescription(){
-        return description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void setQuantity(Integer quantity){
