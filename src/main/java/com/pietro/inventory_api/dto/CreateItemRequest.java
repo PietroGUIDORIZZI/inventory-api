@@ -17,6 +17,22 @@ public class CreateItemRequest {
 
     private Category category;
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
     public String getName(){
         return name;
     }
