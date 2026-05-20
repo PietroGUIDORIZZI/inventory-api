@@ -38,4 +38,18 @@ public class ItemService {
 
         return toResponse(savedItem);
     }
+
+    private ItemResponse toResponse(Item item) {
+
+        ItemResponse response = new ItemResponse();
+
+        response.setId(item.getId());
+        response.setName(item.getName());
+        response.setDescription(item.getDescription());
+        response.setQuantity(item.getQuantity());
+        response.setRoom(item.getRoom());
+        response.setCategory(item.getCategory());
+
+        return response;
+    }
 }
