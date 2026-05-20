@@ -2,6 +2,7 @@ package com.pietro.inventory_api.service;
 
 import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
+import com.pietro.inventory_api.exception.ResourceNotFoundException;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.repository.ItemRepository;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,15 @@ public class ItemService {
         response.setCategory(item.getCategory());
 
         return response;
+    }
+
+    public ItemResponse findById(Long id) {
+        Item item = repository.findById(id)
+                .orElseThrow(()->
+                        new ResourceNotFoundException(
+                                "Item not found"
+                        )
+                );
+        return toResponse(item);
     }
 }

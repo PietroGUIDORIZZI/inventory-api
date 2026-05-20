@@ -1,6 +1,7 @@
 package com.pietro.inventory_api.controller;
 
 
+import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.service.ItemService;
 import org.springframework.web.bind.annotation.*;
@@ -26,5 +27,13 @@ public class ItemController {
     public Item addItem(@RequestBody Item item){
         return service.addItem(item);
     }
+
+    @GetMapping("/{id}")
+    public ItemResponse findById(
+            @PathVariable Long id
+    ){
+        return service.findById(id);
+    }
+
 
 }
