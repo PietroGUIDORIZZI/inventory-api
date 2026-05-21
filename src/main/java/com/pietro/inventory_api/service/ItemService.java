@@ -20,13 +20,6 @@ public class ItemService {
         this.repository = repository;
     }
 
-    public List<Item> listItems() {
-        return repository.findAll();
-    }
-
-    public Item addItem(Item item) {
-        return repository.save(item);
-    }
 
     private ItemResponse toResponse(Item item) {
 
@@ -47,27 +40,14 @@ public class ItemService {
         return response;
     }
 
-    public ItemResponse save(CreateItemRequest request) {
+    public List<ItemResponse> findAll() {
 
-        Item item = new Item();
+        return repository.findAll()
 
-        item.setName(request.getName());
-
-        item.setDescription(request.getDescription());
-
-        item.setQuantity(request.getQuantity());
-
-        item.setRoom(request.getRoom());
-
-        item.setCategory(request.getCategory());
-
-        Item savedItem = repository.save(item);
-
-        return toResponse(savedItem);
+                .stream()
+                .map(item -> toResponse(item))
+                .toList();
     }
-
-
-
 
     public ItemResponse findById(Long id) {
 
@@ -79,13 +59,23 @@ public class ItemService {
         return toResponse(item);
     }
 
-    public List<ItemResponse> findAll() {
+    public ItemResponse create(CreateItemRequest request){
 
-        return repository.findAll()
+        Item item = new Item();
 
-                .stream()
-                .map(item -> toResponse(item))
-                .toList();
+        item.setName(request.getName());
+
+        item.setDescription(resolveDescription(request.getDescription()));
+
+        item.setQuantity(resolveQuantity(request.getQuantity()));
+
+        item.setRoom(resolveRoom(request.getRoom()));
+
+        item.setCategory(resolveCategory(request.getCategory()));
+
+        Item savedItem = repository.save(item);
+
+        return toResponse(savedItem);
     }
 
     public ItemResponse update(Long id, UpdateItemRequest request) {
@@ -94,13 +84,13 @@ public class ItemService {
 
         item.setName(request.getName());
 
-        item.setDescription(request.getDescription());
+        item.setDescription(resolveDescription(request.getDescription()));
 
-        item.setQuantity(request.getQuantity());
+        item.setQuantity(resolveQuantity(request.getQuantity()));
 
-        item.setRoom(request.getRoom());
+        item.setRoom(resolveRoom(request.getRoom()));
 
-        item.setCategory(request.getCategory());
+        item.setCategory(resolveCategory(request.getCategory()));
 
         Item updatedItem = repository.save(item);
 
@@ -117,36 +107,28 @@ public class ItemService {
 
     }
 
-    public Item create(CreateItemRequest request){
 
-        Item item = new Item();
 
-        item.setName(request.getName());
-
-        item.setDescription(
-                request.getDescription() == null ||
-                        request.getDescription().isBlank() ? "No description"
-                        : request.getDescription()
-        );
-
-        item.setQuantity(
-                request.getQuantity() == null
-                        ? 1
-                        : request.getQuantity()
-        );
-
-        item.setRoom(
-                request.getRoom() == null
-                        ? Room.NOT_ALLOCATED
-                        : request.getRoom()
-        );
-
-        item.setCategory(
-                request.getCategory() == null
-                ? Category.NOT_CATEGORIZED
-                        : request.getCategory()
-        );
-
-        return repository.save(item);
+    private String resolveDescription(String description) {
+        return description == null || description.isBlank()
+                ? "No description"
+                : description;
     }
+
+    private Integer resolveQuantity(Integer quantity) {
+        return quantity == null ? 1 : quantity;
+    }
+
+    private Room resolveRoom(Room room) {
+        return room == null
+                ? Room.NOT_ALLOCATED
+                : room;
+    };
+
+    private Category resolveCategory(Category category){
+        return  category == null
+                ? Category.NOT_CATEGORIZED
+                : category;
+    }
+
 }
