@@ -5,7 +5,6 @@ import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.model.Category;
-import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.service.ItemService;
 import jakarta.validation.Valid;
@@ -25,14 +24,20 @@ public class ItemController {
     }
 
     @PostMapping
-    public ItemResponse create(@Valid @RequestBody CreateItemRequest request){
-        return service.create(request);
+    public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request){
+
+        ItemResponse response = service.create(request);
+
+        return ResponseEntity.status(201)
+                .body(response);
     }
     @GetMapping("/search")
-    public List<ItemResponse> findByNameContainingIgnoreCase(
+    public ResponseEntity<List<ItemResponse>> findByNameContainingIgnoreCase(
             @RequestParam String name
     ){
-        return service.findByNameContainingIgnoreCase(name);
+        List<ItemResponse> response = service.findByNameContainingIgnoreCase(name);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
