@@ -6,6 +6,7 @@ import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Item;
+import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class ItemController {
     @PostMapping
     public ItemResponse create(@Valid @RequestBody CreateItemRequest request){
         return service.create(request);
+    }
+    @GetMapping("/search")
+    public List<ItemResponse> findByNameContainingIgnoreCase(
+            @RequestParam String name
+    ){
+        return service.findByNameContainingIgnoreCase(name);
     }
 
     @GetMapping("/{id}")
@@ -61,6 +68,14 @@ public class ItemController {
     ){
         return service.findByCategory(category);
     }
+
+    @GetMapping("/room/{room}")
+    public List<ItemResponse> findByRoom(
+            @PathVariable Room room
+    ){
+        return service.findByRoom(room);
+    }
+
 
 
 }
