@@ -8,6 +8,7 @@ import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+@Tag(
+        name = "Items",
+        description = "Invetory management endpoints"
+)
 @RestController
 @RequestMapping("/items")
 public class ItemController {
@@ -27,7 +32,8 @@ public class ItemController {
     }
 
     //Criar
-    @Operation(summary = "Create")
+    @Operation(summary = "Create",
+            description = "Creates a new inventory item")
     @PostMapping
     public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request){
 
@@ -38,7 +44,8 @@ public class ItemController {
     }
 
     //listar
-    @Operation(summary = "List all items")
+    @Operation(summary = "List all items",
+            description = "Returns a paginated list of all inventory items")
     @GetMapping
     public ResponseEntity<Page<ItemResponse>> findAll(
             Pageable pageable
@@ -51,7 +58,8 @@ public class ItemController {
     }
 
     //busca por id
-    @Operation(summary = "find by id")
+    @Operation(summary = "find by id",
+            description = "Returns a single item by its id")
     @GetMapping("/{id}")
     public ItemResponse findById(
             @PathVariable Long id
@@ -60,7 +68,8 @@ public class ItemController {
     }
 
     //buscar por nome
-    @Operation(summary = "search by name")
+    @Operation(summary = "search by name",
+            description = "Returns all items that contains the word")
     @GetMapping("/search")
     public ResponseEntity<Page<ItemResponse>> findByNameContainingIgnoreCase(
             @RequestParam String name,
@@ -89,7 +98,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "list items with quantity less than x")
+    @Operation(summary = "list items with quantity less than x",
+    description = "returns all items with quantity less that x")
     @GetMapping("/low-stock")
     public ResponseEntity<List<ItemResponse>> findByQuantityLessThan(
             @RequestParam Integer quantity
@@ -99,7 +109,8 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "list running out items(2 or less)")
+    @Operation(summary = "list running out items",
+    description = "list running out items(2 or less)")
     @GetMapping("/running-out")
     public ResponseEntity<List<ItemResponse>> findRunningOutItems(
 
@@ -109,6 +120,7 @@ public class ItemController {
     }
 
     //editar
+    @Operation(summary = "Updates an item")
     @PutMapping("/{id}")
     public ItemResponse update(
             @PathVariable Long id,
@@ -118,6 +130,7 @@ public class ItemController {
     }
 
     //deletar
+    @Operation
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
