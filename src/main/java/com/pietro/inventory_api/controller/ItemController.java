@@ -10,6 +10,8 @@ import com.pietro.inventory_api.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ public class ItemController {
         this.service = service;
     }
 
+    //Criar
     @PostMapping
     public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request){
 
@@ -31,15 +34,20 @@ public class ItemController {
         return ResponseEntity.status(201)
                 .body(response);
     }
-    @GetMapping("/search")
-    public ResponseEntity<List<ItemResponse>> findByNameContainingIgnoreCase(
-            @RequestParam String name
+
+    //listar
+    @GetMapping
+    public ResponseEntity<Page<ItemResponse>> findAll(
+            Pageable pageable
     ){
-        List<ItemResponse> response = service.findByNameContainingIgnoreCase(name);
+
+        Page<ItemResponse> response =
+                service.findAll(pageable);
 
         return ResponseEntity.ok(response);
     }
 
+    //busca por id
     @GetMapping("/{id}")
     public ItemResponse findById(
             @PathVariable Long id
@@ -47,11 +55,52 @@ public class ItemController {
         return service.findById(id);
     }
 
-    @GetMapping
-    public List<ItemResponse> findAll(){
-        return service.findAll();
+    //buscar por nome
+    @GetMapping("/search")
+    public ResponseEntity<Page<ItemResponse>> findByNameContainingIgnoreCase(
+            @RequestParam String name,
+            Pageable pageable
+    ){
+        Page<ItemResponse> response = service.findByNameContainingIgnoreCase(name, pageable);
+
+        return ResponseEntity.ok(response);
     }
 
+    //buscar por descrição
+    @GetMapping("/search/description")
+    public ResponseEntity<Page<ItemResponse>>
+    findByDescriptionContainingIgnoreCase(
+
+            @RequestParam String description,
+            Pageable pageable
+    ){
+
+        Page<ItemResponse> response =
+                service.findByDescriptionContainingIgnoreCase(
+                        description,
+                        pageable
+                );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ItemResponse>> findByQuantityLessThan(
+            @RequestParam Integer quantity
+    ){
+
+        List<ItemResponse> response = service.findByQuantityLessThan(quantity);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/running-out")
+    public ResponseEntity<List<ItemResponse>> findRunningOutItems(
+
+    ){
+        List<ItemResponse> response = service.findRunningOutItems(2);
+        return ResponseEntity.ok(response);
+    }
+
+    //editar
     @PutMapping("/{id}")
     public ItemResponse update(
             @PathVariable Long id,
@@ -60,6 +109,7 @@ public class ItemController {
         return service.update(id, request);
     }
 
+    //deletar
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
@@ -67,13 +117,21 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
+    //buscar por categoria
     @GetMapping("/category/{category}")
-    public List<ItemResponse> findByCategory(
-            @PathVariable Category category
+    public ResponseEntity<Page<ItemResponse>> findByCategory(
+            @PathVariable Category category,
+            Pageable pageable
     ){
-        return service.findByCategory(category);
+        Page<ItemResponse> response =
+                service.findByCategory(
+                        category,
+                        pageable
+                );
+        return ResponseEntity.ok(response);
     }
 
+    //buscar por cômodo
     @GetMapping("/room/{room}")
     public List<ItemResponse> findByRoom(
             @PathVariable Room room

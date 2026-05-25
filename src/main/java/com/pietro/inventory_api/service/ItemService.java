@@ -9,6 +9,8 @@ import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.repository.ItemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -37,16 +39,18 @@ public class ItemService {
 
         response.setCategory(item.getCategory());
 
+        response.setCreatedAt(item.getCreatedAt());
+
+        response.setUpdatedAt(item.getUpdatedAt());
+
         return response;
     }
 
-    public List<ItemResponse> findAll() {
+    public Page<ItemResponse> findAll(Pageable pageable) {
 
-        return repository.findAll()
+        return repository.findAll(pageable)
+                .map(this::toResponse);
 
-                .stream()
-                .map(this::toResponse)
-                .toList();
     }
 
     public ItemResponse findById(Long id) {
@@ -131,11 +135,9 @@ public class ItemService {
                 : category;
     }
 
-    public List<ItemResponse> findByCategory(Category category){
-        return repository.findByCategory(category)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<ItemResponse> findByCategory(Category category, Pageable pageable){
+        return repository.findByCategory(category, pageable)
+                .map(this::toResponse);
     }
 
     public List<ItemResponse> findByRoom(Room room){
@@ -145,8 +147,26 @@ public class ItemService {
                 .toList();
     }
 
-    public List<ItemResponse> findByNameContainingIgnoreCase(String name){
-        return repository.findByNameContainingIgnoreCase(name)
+    public Page<ItemResponse> findByNameContainingIgnoreCase(String name, Pageable pageable){
+        return repository.findByNameContainingIgnoreCase(name, pageable)
+                .map(this::toResponse);
+
+    }
+
+    public Page<ItemResponse> findByDescriptionContainingIgnoreCase(String description, Pageable pageable){
+        return repository.findByDescriptionContainingIgnoreCase(description, pageable)
+                .map(this::toResponse);
+    }
+
+    public List<ItemResponse> findByQuantityLessThan(Integer quantity){
+        return repository.findByQuantityLessThan(quantity)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<ItemResponse> findRunningOutItems(Integer quantity){
+        return repository.findByQuantityLessThanEqual(3)
                 .stream()
                 .map(this::toResponse)
                 .toList();

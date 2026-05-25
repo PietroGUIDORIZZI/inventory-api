@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "items")
 @JsonPropertyOrder({
@@ -37,6 +39,22 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist(){
+
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        updatedAt = LocalDateTime.now();
+    }
+
     public Item() {
     }
 
@@ -63,6 +81,14 @@ public class Item {
             return;
         }
         this.description = description.trim();
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
     public Integer getQuantity() {

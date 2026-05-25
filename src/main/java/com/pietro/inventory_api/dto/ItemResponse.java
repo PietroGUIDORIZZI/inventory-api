@@ -2,6 +2,9 @@ package com.pietro.inventory_api.dto;
 
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 public class ItemResponse {
 
@@ -16,6 +19,26 @@ public class ItemResponse {
     private Room room;
 
     private Category category;
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt(){
+        return createdAt;
+    }
 
     public Long getId() {
         return id;
