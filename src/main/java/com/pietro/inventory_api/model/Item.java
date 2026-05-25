@@ -60,6 +60,7 @@ public class Item {
     public void setDescription(String description) {
         if(description == null || description.isBlank()){
             this.description = "No description";
+            return;
         }
         this.description = description.trim();
     }

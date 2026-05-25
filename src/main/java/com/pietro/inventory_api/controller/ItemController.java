@@ -1,8 +1,10 @@
 package com.pietro.inventory_api.controller;
 
 
+import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
+import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.service.ItemService;
 import jakarta.validation.Valid;
@@ -22,8 +24,8 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item addItem(@Valid @RequestBody Item item){
-        return service.addItem(item);
+    public ItemResponse create(@Valid @RequestBody CreateItemRequest request){
+        return service.create(request);
     }
 
     @GetMapping("/{id}")
@@ -41,7 +43,7 @@ public class ItemController {
     @PutMapping("/{id}")
     public ItemResponse update(
             @PathVariable Long id,
-            @RequestBody UpdateItemRequest request
+            @Valid @RequestBody UpdateItemRequest request
             ){
         return service.update(id, request);
     }
@@ -51,6 +53,13 @@ public class ItemController {
         service.delete(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/category/{category}")
+    public List<ItemResponse> findByCategory(
+            @PathVariable Category category
+    ){
+        return service.findByCategory(category);
     }
 
 

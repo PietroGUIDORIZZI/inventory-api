@@ -45,7 +45,7 @@ public class ItemService {
         return repository.findAll()
 
                 .stream()
-                .map(item -> toResponse(item))
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -129,6 +129,27 @@ public class ItemService {
         return  category == null
                 ? Category.NOT_CATEGORIZED
                 : category;
+    }
+
+    public List<ItemResponse> findByCategory(Category category){
+        return repository.findByCategory(category)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<ItemResponse> findByRoom(Room room){
+        return repository.findByRoom(room)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    public List<ItemResponse> findByNameContainingIgnoreCase(String name){
+        return repository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
 }
