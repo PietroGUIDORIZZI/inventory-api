@@ -7,6 +7,7 @@ import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.service.ItemService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class ItemController {
     }
 
     //Criar
+    @Operation(summary = "Create")
     @PostMapping
     public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request){
 
@@ -36,6 +38,7 @@ public class ItemController {
     }
 
     //listar
+    @Operation(summary = "List all items")
     @GetMapping
     public ResponseEntity<Page<ItemResponse>> findAll(
             Pageable pageable
@@ -48,6 +51,7 @@ public class ItemController {
     }
 
     //busca por id
+    @Operation(summary = "find by id")
     @GetMapping("/{id}")
     public ItemResponse findById(
             @PathVariable Long id
@@ -56,6 +60,7 @@ public class ItemController {
     }
 
     //buscar por nome
+    @Operation(summary = "search by name")
     @GetMapping("/search")
     public ResponseEntity<Page<ItemResponse>> findByNameContainingIgnoreCase(
             @RequestParam String name,
@@ -67,6 +72,7 @@ public class ItemController {
     }
 
     //buscar por descrição
+    @Operation(summary = "search by description")
     @GetMapping("/search/description")
     public ResponseEntity<Page<ItemResponse>>
     findByDescriptionContainingIgnoreCase(
@@ -83,6 +89,7 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "list items with quantity less than x")
     @GetMapping("/low-stock")
     public ResponseEntity<List<ItemResponse>> findByQuantityLessThan(
             @RequestParam Integer quantity
@@ -92,6 +99,7 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "list running out items(2 or less)")
     @GetMapping("/running-out")
     public ResponseEntity<List<ItemResponse>> findRunningOutItems(
 
