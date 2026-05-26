@@ -50,4 +50,19 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(ItemAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleItemAlreadyExists(
+            ItemAlreadyExistsException ex
+    ){
+
+        ErrorResponse error = new ErrorResponse(
+                ex.getMessage(),
+                409
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(error);
+    }
+
 }

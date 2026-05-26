@@ -21,4 +21,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByQuantityLessThan(Integer quantity);
 
     List<Item> findByQuantityLessThanEqual(Integer quantity);
+
+    boolean existsByNameIgnoreCase(String name);
+
 }

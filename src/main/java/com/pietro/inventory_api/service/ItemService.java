@@ -4,10 +4,12 @@ import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.PatchItemRequest;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
+import com.pietro.inventory_api.exception.ItemAlreadyExistsException;
 import com.pietro.inventory_api.exception.ItemNotFoundException;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.model.Room;
+import com.pietro.inventory_api.model.StockStatus;
 import com.pietro.inventory_api.repository.ItemRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,10 @@ public class ItemService {
 
         response.setUpdatedAt(item.getUpdatedAt());
 
+        response.setStockStatus(
+                calculateStockStatus(item.getQuantity())
+        );
+
         return response;
     }
 
@@ -66,6 +72,12 @@ public class ItemService {
     }
 
     public ItemResponse create(CreateItemRequest request){
+
+        if(repository.existsByNameIgnoreCase(request.getName())) {
+            throw new ItemAlreadyExistsException(
+                    request.getName()
+            );
+        }
 
         Item item = new Item();
 
@@ -103,6 +115,20 @@ public class ItemService {
         return toResponse(updatedItem);
 
 
+    }
+
+    private StockStatus calculateStockStatus(
+            Integer quantity
+    ){
+        if(quantity == 0 ){
+            return StockStatus.OUT_OF_STOCK;
+        }
+
+        if(quantity <= 2) {
+            return StockStatus.LOW_STOCK;
+        }
+
+        return StockStatus.IN_STOCK;
     }
 
     public void delete(Long id) {

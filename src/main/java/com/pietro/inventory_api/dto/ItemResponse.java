@@ -2,8 +2,8 @@ package com.pietro.inventory_api.dto;
 
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
+import com.pietro.inventory_api.model.StockStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +20,16 @@ public class ItemResponse {
     private Room room;
 
     private Category category;
+
+    private StockStatus stockStatus;
+
+    public StockStatus getStockStatus() {
+        return stockStatus;
+    }
+
+    public void setStockStatus(StockStatus stockStatus) {
+        this.stockStatus = stockStatus;
+    }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
