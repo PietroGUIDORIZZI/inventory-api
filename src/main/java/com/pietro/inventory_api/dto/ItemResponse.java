@@ -2,6 +2,7 @@ package com.pietro.inventory_api.dto;
 
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
@@ -28,8 +29,16 @@ public class ItemResponse {
         this.updatedAt = updatedAt;
     }
 
+    @Schema(
+            description = "Creation timestamp",
+            example = "2026-05-25T14:30:00"
+    )
     private LocalDateTime createdAt;
 
+    @Schema(
+            description = "Updated timestamp",
+            example = "2026-05-25T14:30:00"
+    )
     private LocalDateTime updatedAt;
 
     public LocalDateTime getUpdatedAt() {

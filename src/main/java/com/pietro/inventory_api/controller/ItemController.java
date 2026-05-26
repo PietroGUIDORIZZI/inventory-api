@@ -8,6 +8,8 @@ import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +34,21 @@ public class ItemController {
     }
 
     //Criar
-    @Operation(summary = "Create",
+    @Operation(
+            summary = "Create",
             description = "Creates a new inventory item")
+    @ApiResponses(value = {
+
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Item create successfully"
+            ),
+
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Validation error"
+            )
+    })
     @PostMapping
     public ResponseEntity<ItemResponse> create(@Valid @RequestBody CreateItemRequest request){
 
@@ -44,8 +59,14 @@ public class ItemController {
     }
 
     //listar
-    @Operation(summary = "List all items",
-            description = "Returns a paginated list of all inventory items")
+    @Operation(
+            summary = "List all items",
+            description = "Returns a paginated list of all inventory items"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Items retrieved successfully"
+    )
     @GetMapping
     public ResponseEntity<Page<ItemResponse>> findAll(
             Pageable pageable
@@ -58,8 +79,21 @@ public class ItemController {
     }
 
     //busca por id
-    @Operation(summary = "find by id",
-            description = "Returns a single item by its id")
+    @Operation(
+            summary = "Find item by id",
+            description = "Returns a single item by its id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Item found"
+            ),
+
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item not found"
+            )
+    })
     @GetMapping("/{id}")
     public ItemResponse findById(
             @PathVariable Long id
@@ -120,7 +154,25 @@ public class ItemController {
     }
 
     //editar
-    @Operation(summary = "Updates an item")
+    @Operation(
+            summary = "Updates an item",
+            description = "Updates an existing inventory item"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Item updated successfully"
+            ),
+
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item not found"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Validation error"
+            )
+    })
     @PutMapping("/{id}")
     public ItemResponse update(
             @PathVariable Long id,
@@ -130,7 +182,20 @@ public class ItemController {
     }
 
     //deletar
-    @Operation
+    @Operation(
+            summary = "Delete item",
+            description = "Deletes an item by id"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Item deleted succesfully"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Item not found"
+            )
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
