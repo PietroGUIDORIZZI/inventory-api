@@ -3,6 +3,7 @@ package com.pietro.inventory_api.controller;
 
 import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
+import com.pietro.inventory_api.dto.PatchItemRequest;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Room;
@@ -233,6 +234,16 @@ public class ItemController {
             @PathVariable Room room
     ){
         return service.findByRoom(room);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ItemResponse> patch(
+            @PathVariable Long id,
+            @Valid @RequestBody PatchItemRequest request
+            ){
+        ItemResponse response = service.patch(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
 

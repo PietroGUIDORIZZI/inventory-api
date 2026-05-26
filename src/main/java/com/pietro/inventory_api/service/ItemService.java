@@ -2,12 +2,14 @@ package com.pietro.inventory_api.service;
 
 import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
+import com.pietro.inventory_api.dto.PatchItemRequest;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
 import com.pietro.inventory_api.exception.ItemNotFoundException;
 import com.pietro.inventory_api.model.Category;
 import com.pietro.inventory_api.model.Item;
 import com.pietro.inventory_api.model.Room;
 import com.pietro.inventory_api.repository.ItemRepository;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -172,4 +174,32 @@ public class ItemService {
                 .toList();
     }
 
+    public ItemResponse patch(Long id, @Valid PatchItemRequest request) {
+        Item item = repository.findById(id)
+                .orElseThrow(()-> new ItemNotFoundException(id));
+
+        if (request.getName() != null) {
+            item.setName(request.getName());
+        }
+
+        if(request.getDescription() != null) {
+            item.setDescription(resolveDescription(request.getDescription()));
+        }
+
+        if(request.getQuantity() != null) {
+            item.setQuantity(resolveQuantity(request.getQuantity()));
+        }
+
+        if(request.getRoom() != null) {
+            item.setRoom(resolveRoom(request.getRoom()));
+        }
+        if(request.getCategory() != null) {
+            item.setCategory(resolveCategory(request.getCategory()));
+        }
+
+        Item patchedItem = repository.save(item);
+
+        return toResponse(patchedItem);
+
+    }
 }
