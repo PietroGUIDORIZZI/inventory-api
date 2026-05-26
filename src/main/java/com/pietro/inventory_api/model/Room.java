@@ -1,11 +1,14 @@
 package com.pietro.inventory_api.model;
 
 public enum Room {
-    KITCHEN,
-    LIVING_ROOM,
-    BEDROOM,
-    BATHROOM,
-    GARAGE,
+    GARDEN,
     LAUNDRY,
+    KITCHEN,
+    TOILET,
+    LIVING_ROOM,
+    STAIRS,
+    BEDROOM,
+    STUDIO,
+    BATHROOM,
     NOT_ALLOCATED
 }

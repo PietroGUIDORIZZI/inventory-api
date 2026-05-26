@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
@@ -69,8 +72,15 @@ public class ItemController {
     )
     @GetMapping
     public ResponseEntity<Page<ItemResponse>> findAll(
-            Pageable pageable
-    ){
+
+
+            @PageableDefault(
+                    size = 10,
+                    sort = "createdAt",
+                    direction = Sort.Direction.DESC
+            )
+            @ParameterObject Pageable pageable,
+            Sort sort){
 
         Page<ItemResponse> response =
                 service.findAll(pageable);
@@ -107,7 +117,7 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<Page<ItemResponse>> findByNameContainingIgnoreCase(
             @RequestParam String name,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ){
         Page<ItemResponse> response = service.findByNameContainingIgnoreCase(name, pageable);
 
@@ -121,7 +131,7 @@ public class ItemController {
     findByDescriptionContainingIgnoreCase(
 
             @RequestParam String description,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ){
 
         Page<ItemResponse> response =
@@ -207,7 +217,7 @@ public class ItemController {
     @GetMapping("/category/{category}")
     public ResponseEntity<Page<ItemResponse>> findByCategory(
             @PathVariable Category category,
-            Pageable pageable
+            @ParameterObject Pageable pageable
     ){
         Page<ItemResponse> response =
                 service.findByCategory(
