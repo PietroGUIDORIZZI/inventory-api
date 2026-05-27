@@ -4,6 +4,7 @@ import com.pietro.inventory_api.dto.CreateItemRequest;
 import com.pietro.inventory_api.dto.ItemResponse;
 import com.pietro.inventory_api.dto.PatchItemRequest;
 import com.pietro.inventory_api.dto.UpdateItemRequest;
+import com.pietro.inventory_api.exception.InvalidStockException;
 import com.pietro.inventory_api.exception.ItemAlreadyExistsException;
 import com.pietro.inventory_api.exception.ItemNotFoundException;
 import com.pietro.inventory_api.model.Category;
@@ -79,6 +80,10 @@ public class ItemService {
             );
         }
 
+        if(request.getQuantity() != null && request.getQuantity() > 1000){
+            throw new InvalidStockException();
+        }
+
         Item item = new Item();
 
         item.setName(request.getName());
@@ -86,6 +91,7 @@ public class ItemService {
         item.setDescription(resolveDescription(request.getDescription()));
 
         item.setQuantity(resolveQuantity(request.getQuantity()));
+
 
         item.setRoom(resolveRoom(request.getRoom()));
 
