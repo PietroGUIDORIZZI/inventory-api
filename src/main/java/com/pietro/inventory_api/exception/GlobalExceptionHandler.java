@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +15,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleItemNotFound(
-            ItemNotFoundException ex
-    ){
+            ItemNotFoundException ex,
+            HttpServletRequest request
+    ) {
+
         ErrorResponse error = new ErrorResponse(
+                404,
+                "Not Found",
                 ex.getMessage(),
-                404
+                request.getRequestURI()
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -28,7 +32,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorResponse> handleValidation(
-            MethodArgumentNotValidException ex
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
     ) {
 
         Map<String, String> errors = new HashMap<>();
@@ -44,7 +49,10 @@ public class GlobalExceptionHandler {
 
         ValidationErrorResponse response =
                 new ValidationErrorResponse(
+                        400,
+                        "Validation Error",
                         "Validation failed",
+                        request.getRequestURI(),
                         errors
                 );
 
@@ -53,12 +61,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ItemAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleItemAlreadyExists(
-            ItemAlreadyExistsException ex
-    ){
+            ItemAlreadyExistsException ex,
+            HttpServletRequest request
+    ) {
 
         ErrorResponse error = new ErrorResponse(
+                409,
+                "Conflict",
                 ex.getMessage(),
-                409
+                request.getRequestURI()
         );
 
         return ResponseEntity.status(HttpStatus.CONFLICT)
